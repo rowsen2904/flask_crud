@@ -85,7 +85,7 @@
 <div id="addEmployeeModal" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form>
+      <form action="{{ url_for('books_list_create') }}" method="POST">
         <div class="modal-header">
           <h4 class="modal-title">Add Employee</h4>
           <button

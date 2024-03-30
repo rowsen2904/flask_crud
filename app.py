@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -20,10 +20,22 @@ class Book(db.Model):
         return f"<Author: {self.author}>"
 
 
-@app.route("/")
-def books_list():
+@app.route("/", methods=["GET", "POST"])
+def books_list_create():
+    status_code = 200
     books = Book.query.all()
-    return render_template("index.html", books=books)
+    if request.method == "POST":
+        author = request.form.get("author")
+        page_size = request.form.get("page_size")
+        released_date = request.form.get("released_date")
+        if author and page_size and released_date:
+            released_date = datetime.strptime(released_date, "%Y-%m-%d")
+            book = Book(author=author, page_size=page_size, released_date=released_date)
+            db.session.add(book)
+            db.session.commit()
+            status_code = 201
+
+    return render_template("index.html", books=books), status_code
 
 
 @app.route("/login/", methods=["GET", "POST"])
