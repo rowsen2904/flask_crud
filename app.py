@@ -1,11 +1,28 @@
+from datetime import datetime
+
 from flask import Flask, render_template, request
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///test.db"
+
+db = SQLAlchemy(app)
+
+
+class Book(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    author = db.Column(db.String(150), nullable=False)
+    page_size = db.Column(db.Integer, nullable=False)
+    released_date = db.Column(db.Date)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self) -> str:
+        return f"<Author: {self.author}>"
 
 
 @app.route("/")
 def index():
-    return render_template("index.html"), 500123
+    return render_template("index.html")
 
 
 @app.route("/login/", methods=["GET", "POST"])
