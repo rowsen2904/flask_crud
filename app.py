@@ -22,7 +22,8 @@ class Book(db.Model):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    books = Book.query.all()
+    return render_template("index.html", books=books)
 
 
 @app.route("/login/", methods=["GET", "POST"])
