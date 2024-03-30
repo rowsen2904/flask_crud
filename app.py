@@ -21,7 +21,7 @@ class Book(db.Model):
 
 
 @app.route("/")
-def index():
+def books_list():
     books = Book.query.all()
     return render_template("index.html", books=books)
 
